@@ -12,3 +12,9 @@ export const signup = async (req, res) => {
 res.send("Signup route is callseed")
 };
 
+export const login = async (req,res) => {
+    res.send("logging")
+}
+export const signout = async (req,res) => {
+    res.send("logoutt")
+}

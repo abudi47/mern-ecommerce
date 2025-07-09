@@ -1,26 +1,64 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: [true, "Email is required "],
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
 
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+    name: {
+      type: String,
+      required: [true, "Name is required "],
+    },
 
-  firstName: {
-    type: String,
-    required: true,
+    password: {
+      type: String,
+      required: true,
+      minlength: [4, "Password must be at least 4 charachters"],
+    },
+    cartItems: [
+      {
+        quantity: {
+          type: Number,
+          default: 1,
+        },
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+      },
+    ],
+
+    role: {
+      type: String,
+      enum: ["customer", "admin"],
+      default: "customer",
+    },
   },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 4,
-  },
+  { timestamps: true }
+);
+
+// pre save hook to hash passwords before saving to database
+const User = mongoose.model("User", userSchema);
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
-const User = mongoose.model("User", userSchema);
+userSchema.methods.comparePassword = async function (password) {
+  return bcrypt.compare(password , this.password)
+}
+
 export default User;
