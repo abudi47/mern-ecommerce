@@ -1,15 +1,35 @@
+import User from "../models/user.model.js";
 export const signup = async (req, res) => {
-//   try {
-//     const { fullName, email, password } = req.body;
-//     if (password.length < 4) {
-//       return res
-//         .status(400)
-//         .json({ message: "password length must be greater than 4" });
-//     }
-//   } catch (error) {
-//     return res.status(500).json({ message: "INTERNAL SERVER ERROR" });
-//   }
-res.send("Signup route is callseed")
+  try {
+    const { name, email, password } = req.body;
+
+    const userExist = await User.findOne({ email });
+    if (userExist) {
+        return res.status(400).json({ message: "User already exists" });   
+    }
+    const user = new User({ name, email, password });
+
+    if (user) {
+        await user.save();
+
+        res.status(200).json({
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        createdAt: user.createdAt,
+        });
+    }
+    else {
+      res.status(400).json({ message: "invalid userData" });
+    }
+   
+    
+
+    
+  } catch (error) {
+     res.status(500).json({ message: error.message ||"INTERNAL SERVER ERROR" });
+     console.log(error.message)
+  }
 };
 
 export const login = async (req,res) => {
