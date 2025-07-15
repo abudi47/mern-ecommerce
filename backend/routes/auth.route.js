@@ -4,7 +4,8 @@ import {
   signout,
   login,
   checkAuth,
-  refreshToken
+  refreshToken,
+  getAllUsers
 } from "../controller/auth.controller.js";
 const router = express.Router();
 
@@ -13,5 +14,8 @@ router.post("/login", login);
 router.post("/signout", signout);
 router.post("/check-auth", checkAuth);
 router.post("/refresh-token", refreshToken);
+
+//only for testing purposes
+router.get("/users" , getAllUsers);
 
 export default router;

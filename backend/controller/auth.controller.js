@@ -191,3 +191,13 @@ export const refreshToken = async (req, res) => {
     });
   }
 };
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, "-password");
+    res.status(200).json(users);
+  } catch (error) {
+    console.log("Error in getAllUsers:", error.message);
+    res.status(500).json({ message: error.message || "INTERNAL SERVER ERROR" });
+  }
+}

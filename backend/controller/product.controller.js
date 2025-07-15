@@ -11,3 +11,13 @@ export const getAllProducts = async (req,res) => {
     }
 
 }
+
+export const getFeaturedProducts = async (req, res) => {
+    const featureProducts = await Product.find({ isFeatured: true });
+    try {
+        res.status(200).json(featureProducts);
+    } catch (error) {
+        console.log("Error in getFeaturedProducts:", error.message);
+        res.status(500).json({ message: error.message || "INTERNAL SERVER ERROR" });    
+    }
+}
