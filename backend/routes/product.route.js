@@ -3,6 +3,7 @@ import {
   getAllProducts,
   getFeaturedProducts,
   createProduct,
+  deleteProduct,
 } from "../controller/product.controller.js";
 import { protectedRoute, adminRoute } from "../middleware/auth.middleware.js";
 import multer from "multer";
@@ -18,4 +19,6 @@ router.post(
   upload.single("image"),
   createProduct
 );
+
+router.delete("/:id", protectedRoute, adminRoute, deleteProduct);
 export default router;
