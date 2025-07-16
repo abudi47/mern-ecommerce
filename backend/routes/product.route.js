@@ -4,6 +4,7 @@ import {
   getFeaturedProducts,
   createProduct,
   deleteProduct,
+  getRecommendedProducts,
 } from "../controller/product.controller.js";
 import { protectedRoute, adminRoute } from "../middleware/auth.middleware.js";
 import multer from "multer";
@@ -12,6 +13,7 @@ const upload = multer();
 
 router.get("/", protectedRoute, adminRoute, getAllProducts);
 router.get("/featured", getFeaturedProducts);
+router.get("/recommendations", getRecommendedProducts);
 router.post(
   "/create",
   protectedRoute,
