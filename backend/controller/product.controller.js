@@ -44,7 +44,7 @@ export const getFeaturedProducts = async (req, res) => {
 export const createProduct = async (req, res) => {
   try {
     const { name, price, description, category } = req.body;
-    const image = req.file;
+    const image = req.file;// Assuming the image is sent as a file in the request
 
     let cloudinaryResponse;
 
@@ -122,9 +122,42 @@ export const getProductsByCategory = async (req, res) => {
     try {
       const products = await Product.find({ category });
       res.status(200).json(products);
-    } catch (error) {}
+    } catch (error) {
+      res.status(404).json({ message: "No products found in this category" });
+    }
   } catch (error) {
     console.log("Error in getProductsByCategory:", error.message);
     res.status(500).json({ message: error.message || "INTERNAL SERVER ERROR" });
   }
 };
+
+export const togglefeaturedProduct = async (req, res) => {
+  try {
+    const product = req.params.id;
+    if (product) {
+      product.isFeatured = !product.isFeatured;
+      const updatedProduct = await product.save();
+      await updateFeaturedProductsCache();
+      res.status(200).json({
+        message: `Product ${
+          updatedProduct.isFeatured ? "featured" : "unfeatured"
+        } successfully`,
+        product: updatedProduct,
+      });
+    } else {
+      return res.status(404).json({ message: "Product not found" });
+    }
+  } catch (error) {
+    console.log("Error in togglefeaturedProduct:", error.message);
+    res.status(500).json({ message: error.message || "INTERNAL SERVER ERROR" });
+  }
+};
+
+async function updateFeaturedProductsCache() {
+  try {
+    const featureProducts = await product.find({ isFeatured: true }).lean();
+    await redis.set("featuredProducts", JSON.stringify(featureProducts));
+  } catch (error) {
+    console.log("Error in updateFeaturedProductsCache:", error.message);
+  }
+}
