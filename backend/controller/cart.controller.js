@@ -1,5 +1,5 @@
 // import { cache } from "react";
-
+import Product from "../models/product.model.js";
 export const addToCart = async (req, res) => {
   try {
     const { productId } = req.body;
@@ -24,7 +24,26 @@ export const addToCart = async (req, res) => {
   }
 };
 
-export const getCartItems = async (req, res) => {};
+export const getCartProducts = async (req, res) => {
+  try {
+    const products = await Product.find({ _id: { $in: req.user.cartItems } }); //
+
+    //add quantity to each product
+    const cartProducts = products.map((product) => {
+      const cartItem = req.user.cartItems.find(
+        (item) => item.productId.toString() === product._id.toString()
+      );
+      return {
+        ...product.toJSON(),
+        quantity: cartItem ? cartItem.quantity : 1, // Default quantity to 1 if not found
+      };
+    });
+    res.status(200).json(cartProducts);
+  } catch (error) {
+    console.log("Error in getCartProducts:", error.message);
+    res.status(500).json({ message: error.message || "INTERNAL SERVER ERROR" });
+  }
+};
 
 export const removeAllFromCart = async (req, res) => {
   try {

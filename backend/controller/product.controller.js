@@ -44,7 +44,7 @@ export const getFeaturedProducts = async (req, res) => {
 export const createProduct = async (req, res) => {
   try {
     const { name, price, description, category } = req.body;
-    const image = req.file;// Assuming the image is sent as a file in the request
+    const image = req.file; // Assuming the image is sent as a file in the request
 
     let cloudinaryResponse;
 
@@ -70,7 +70,6 @@ export const createProduct = async (req, res) => {
 };
 
 export const deleteProduct = async (req, res) => {
-  
   try {
     const product = await Product.findById(req.params.id);
 
@@ -153,7 +152,6 @@ export const togglefeaturedProduct = async (req, res) => {
     res.status(500).json({ message: error.message || "INTERNAL SERVER ERROR" });
   }
 };
-
 async function updateFeaturedProductsCache() {
   try {
     const featureProducts = await product.find({ isFeatured: true }).lean();
