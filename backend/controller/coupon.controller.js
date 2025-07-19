@@ -1,0 +1,1 @@
+export const getCoupon = async (req, res) => {};
