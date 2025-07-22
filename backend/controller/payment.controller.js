@@ -62,14 +62,9 @@ export const createCheckoutSession = async (req, res) => {
     });
 
     if (totalAmount >= 20000) {
-        await createNewCoupon(req.user._id); // Create a new coupon for the user
-
+      await createNewCoupon(req.user._id); // Create a new coupon for the user
     }
     res.status(200).json({ id: session.id, totalAmount: totalAmount / 100 }); // Return session ID and total amount in dollars
-
-    
-
-
   } catch (error) {
     console.log("Error in createCheckoutSession:", error.message);
     return res
@@ -102,4 +97,5 @@ async function createNewCoupon(userId) {
   await newCoupon.save();
   return newCoupon;
 }
- 
+
+export const checkoutSuccess = async (req, res) => {};
