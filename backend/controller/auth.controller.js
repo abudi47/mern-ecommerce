@@ -200,4 +200,20 @@ export const getAllUsers = async (req, res) => {
     console.log("Error in getAllUsers:", error.message);
     res.status(500).json({ message: error.message || "INTERNAL SERVER ERROR" });
   }
-}
+};
+
+export const getProfile = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming user ID is stored in req.user
+    const user = await User.findById(userId, "-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.log("Error in getProfile:", error.message);
+    res.status(500).json({ message: error.message || "INTERNAL SERVER ERROR" });
+  }
+};
