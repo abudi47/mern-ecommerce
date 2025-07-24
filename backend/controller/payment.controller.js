@@ -58,7 +58,14 @@ export const createCheckoutSession = async (req, res) => {
         : [],
       metadata: {
         userId: req.user._id.toString(),
-        couponId: coupon ? coupon._id : null,
+        couponCode: coupon ? coupon._id : null,
+        products: JSON.stringify(
+          products.map((p) => ({
+            id: p._id,
+            quantity: p.quantity,
+            price: p.price,
+          }))
+        ),
       },
     });
 
