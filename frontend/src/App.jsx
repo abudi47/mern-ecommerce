@@ -16,7 +16,7 @@ function App() {
         </div>
       </div>
 
-      <div className="relative z-50 pt-20">
+      <div className="relative z-55 pt-20">
         <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
